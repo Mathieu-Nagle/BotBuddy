@@ -48,4 +48,6 @@ We believe the BotBuddy will be a fun and interactive way to get young students 
   * [E2] Time-limit expires; question closes and results are displayed
   
 ### Design Sketches
+#### Sequence Flow
+![Sequence Flow](SequenceFlow.png)
 ### Architecture Design
