@@ -50,4 +50,6 @@ We believe the BotBuddy will be a fun and interactive way to get young students 
 ### Design Sketches
 #### Sequence Flow
 ![Sequence Flow](SequenceFlow.png)
+#### Storyboard
+![Storyboard](Design_Storyboard.png)
 ### Architecture Design
