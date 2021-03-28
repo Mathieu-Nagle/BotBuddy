@@ -1,4 +1,4 @@
-# SSW345-team-project
+# BotBuddy Workshop Questions
 ### Questions
 (1) The two seed ideas we would like to work on are the RewardBot and the FocusBot.
 
