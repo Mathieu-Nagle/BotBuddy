@@ -54,6 +54,6 @@ We believe the BotBuddy will be a fun and interactive way to get young students 
 ![Storyboard](Design_Storyboard.png)
 ### Architecture Design
 #### Diagram
-![Architecture Design]()
+![Architecture Design](ArchitectureDesign.PNG)
 After conducting research on how bots work in Slack, we were able to develop an architecture design for BotBuddy.
 In our design, we first start in the Slack workspace, where users would use commands. From there, those commands will be send to Node.js which is running locally on our servers. The index.js file, where BotBuddy resides, will look at the command and call the appropriate function. Based off the function, calls will be made to the Slack API to send messages or questions to the user while the SQL Database will store questions that were created.
