@@ -55,5 +55,10 @@ We believe the BotBuddy will be a fun and interactive way to get young students 
 ### Architecture Design
 #### Diagram
 ![Architecture Design](ArchitectureDesign.PNG)
+
 After conducting research on how bots work in Slack, we were able to develop an architecture design for BotBuddy.
 In our design, we first start in the Slack workspace, where users would use commands. From there, those commands will be send to Node.js which is running locally on our servers. The index.js file, where BotBuddy resides, will look at the command and call the appropriate function. Based off the function, calls will be made to the Slack API to send messages or questions to the user while the SQL Database will store questions that were created.
+
+During the process of creating our bot, we have a Slack workspace created to run BotBuddy. The functions BotBuddy will perform are based off of the use cases, which are explained above. Overall, BotBuddy will be montioring commands in the Slack Workspace and whether the user has access to the command used. All the commands that are used can only triggered by the Slack Channel Admin, which would be the teacher. When a teacher uses a command to create a question, BotBuddy will call the Slack API to display a UI where the teacher can create the question which is then stored in the SQL Database. The teacher can then use a command to post a question, and BotBuddy use a query to get the question from the SQL Database and then call the Slack API to send the question to all members of the channel. From there, the members, or students, can interact with the button components to answer the question. Based on the component that was selected, BotBuddy will validate whether the correct component was selected. If it was, then BotBuddy will call the Slack API to display a gif. Otherwise, BotBuddy will call the Slack API to display a hint that was previously obtained from the SQL Database. 
+
+For BotBuddy to work, Node.js must be running the index.js file locally on our server. Without it, BotBuddy would not be able to run and would not be able to call the Slack API to perform functions.
