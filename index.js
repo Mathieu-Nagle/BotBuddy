@@ -22,7 +22,7 @@ slackEvents.on('app_mention', (event) => {
 slackEvents.on('error', console.error);
 
 slackEvents.start(port).then(() => {
-    console.log(`Serever started on port ${port}`)
+    console.log(`Server started on port ${port}`)
 });
 
 // const { App } = require('@slack/bolt');
