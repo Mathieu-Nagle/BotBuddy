@@ -13,6 +13,16 @@ slackEvents.on('app_mention', (event) => {
     (async () => {
     try {
         await slackClient.chat.postMessage({channel:event.channel, text:`Hello <@${event.user}>!:tada:`})
+        await slackClient.chat.postMessage({channel:event.channel, blocks:
+            [
+                {
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": "Hello, Assistant to the Regional Manager Dwight! *Michael Scott* wants to know where you'd like to take the Paper Company investors to dinner tonight.\n\n *Please select a restaurant:*"
+                    }
+                }
+            ]})
     } catch (error){
         console.log(error.data);
     }
