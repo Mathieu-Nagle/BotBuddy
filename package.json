@@ -1,0 +1,24 @@
+{
+  "name": "botbuddy",
+  "version": "1.0.0",
+  "description": "A Slackbot that...",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mathieu-Nagle/BotBuddy.git"
+  },
+  "author": "Leena Domadia and Mathieu Nagle",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Mathieu-Nagle/BotBuddy/issues"
+  },
+  "homepage": "https://github.com/Mathieu-Nagle/BotBuddy#readme",
+  "dependencies": {
+    "@slack/bolt": "^3.3.0",
+    "@slack/events-api": "^3.0.0",
+    "@slack/web-api": "^6.1.0"
+  }
+}
