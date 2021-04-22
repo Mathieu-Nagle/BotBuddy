@@ -2,6 +2,11 @@ const { WebClient } = require('@slack/web-api');
 const { createEventAdapter } = require('@slack/events-api');
 const { App } = require('@slack/bolt');
 
+// import firebase from 'firebase/app';
+var firebase = require ('firebase/app');
+require("firebase/firestore");
+
+
 const slackSigningSecret = process.env.SLACK_SIGNING_SECRET;
 const slackBotToken = process.env.SLACK_BOT_TOKEN;
 const port = process.env.SLACK_PORT || 3000;
@@ -13,6 +18,17 @@ const app = new App({
     token: slackBotToken,
     signingSecret: slackSigningSecret
 })
+
+var firebaseConfig = {
+    apiKey: "AIzaSyAXNxH7TAoGhm0EeB17cZhrPT4CSEYDTYM",
+    authDomain: "botbuddy-d0728.firebaseapp.com",
+    projectId: "botbuddy-d0728",
+    storageBucket: "botbuddy-d0728.appspot.com",
+    messagingSenderId: "172293752081",
+    appId: "1:172293752081:web:6f7c8c1f5143c3a143f8b0",
+    measurementId: "G-FNG0EFHN6R"
+};
+firebase.initializeApp(firebaseConfig);
 
 app.command('/test', async ({ command, ack, say }) => {
     // Acknowledge command request
@@ -258,6 +274,10 @@ app.view('submit_question', ({ ack, body, view, context}) => {
     ack();
     const title = view['state']['values']['title_input']['title'];
     console.log("Title: ", title);
+    var db = firebase.firestore();
+    db.collection("questions").add({
+        title: view['state']['values']['title_input']['title'].value
+    })
 });
 
 app.message(':wave:', async ({ message, say }) => {
@@ -305,6 +325,7 @@ app.event('app_home_opened', async ({ event, client, context}) => {
                 ]
             }
         });
+        console.log(result);
     }
     catch (error) {
         console.error(error);
