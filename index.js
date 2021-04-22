@@ -101,6 +101,7 @@ app.command('/createquestion', async ({ ack, payload, context }) => {
                 "blocks": [
                     {
                         "type": "input",
+                        "block_id": "title_input",
                         "element": {
                             "type": "plain_text_input",
                             "action_id": "title",
@@ -241,7 +242,8 @@ app.command('/createquestion', async ({ ack, payload, context }) => {
                         }
                     }
                 ],
-                "type": "modal"
+                "type": "modal",
+                "callback_id": "submit_question"
             }
 
         })
@@ -250,6 +252,12 @@ app.command('/createquestion', async ({ ack, payload, context }) => {
     catch(error) {
         console.error(error);
     }
+});
+
+app.view('submit_question', ({ ack, body, view, context}) => {
+    ack();
+    const title = view['state']['values']['title_input']['title'];
+    console.log("Title: ", title);
 });
 
 app.message(':wave:', async ({ message, say }) => {
