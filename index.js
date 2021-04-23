@@ -455,7 +455,14 @@ app.action('correct', async ({ ack, say, client, body }) => {
     const response = client.chat.postEphemeral({
         channel: channelId,
         user: userId,
-        text: 'Good job :+1:'
+        attachments: [
+            {
+                "fallback": "correct",
+                "color": "#36a64f",
+                "pretext": "Great Job:tada::tada::tada:",
+                "image_url": "https://media2.giphy.com/media/26tOZ42Mg6pbTUPHW/giphy.gif"
+            }
+        ]
       });
     // await say('Good job 👍');
 });
@@ -469,7 +476,14 @@ app.action('incorrect', async ({ ack, say, client, body }) => {
     const response = client.chat.postEphemeral({
         channel: channelId,
         user: userId,
-        text: 'Bad job :-1:'
+        attachments: [
+            {
+                "fallback": 'incorrect',
+                "color": '#dd312d',
+                "pretext": "Here's a hint:",
+                "image_url": 'https://images-na.ssl-images-amazon.com/images/I/91CojPTqKjL._AC_SL1500_.jpg'
+            }
+        ]
       });
     // await say('Bad job :-1:');
 });
