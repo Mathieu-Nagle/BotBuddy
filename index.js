@@ -301,8 +301,43 @@ app.view('submit_question', ({ ack, body, view, context}) => {
     })
 });
 
-app.command('/postquestion', async ({ ack, payload, context }) => {
+app.command('/postquestion', async ({ ack, body, view, payload, context, say }) => {
     ack();
+    // console.log(body['user_id']);
+    var db = firebase.firestore();
+    // console.log(payload.text);
+    const dbRef = db.collection(body['user_id']);
+    const snapshot  = await dbRef.where('title', '==', payload.text).get();
+    const myArray = []
+    
+    // console.log(snapshot.user);
+    if (snapshot.empty) {
+        await say('No matching documents.');
+        return;
+      }  
+      
+      snapshot.forEach(doc => {
+        myArray.push(doc.data());
+      });
+
+      var option_1 = "incorrect";
+      var option_2 = "incorrect";
+      var option_3 = "incorrect";
+      var option_4 = "incorrect";
+      if (myArray[0].correct_ans == 'Option 1') {
+        option_1 = "correct";
+      }
+      else if (myArray[0].correct_ans == 'Option 2') {
+        option_2 = "correct";
+      }
+      else if (myArray[0].correct_ans == 'Option 3') {
+        option_3 = "correct";
+      }
+      else if (myArray[0].correct_ans == 'Option 4') {
+        option_4 = "correct";
+      }
+      
+
     try {
         const result = await app.client.chat.postMessage({
             token: context.botToken,
@@ -313,7 +348,7 @@ app.command('/postquestion', async ({ ack, payload, context }) => {
                         "text": {
                             "type": "plain_text",
                             "emoji": true,
-                            "text": "Question goes here"
+                            "text": myArray[0].question
                         }
                     },
                     {
@@ -331,11 +366,11 @@ app.command('/postquestion', async ({ ack, payload, context }) => {
                         "type": "section",
                         "text": {
                             "type": "mrkdwn",
-                            "text": "Option 1"
+                            "text": myArray[0].option_1
                         },
                         "accessory": {
                             "type": "button",
-                            "action_id": "incorrect",
+                            "action_id": option_1,
                             "text": {
                                 "type": "plain_text",
                                 "emoji": true,
@@ -348,11 +383,11 @@ app.command('/postquestion', async ({ ack, payload, context }) => {
                         "type": "section",
                         "text": {
                             "type": "mrkdwn",
-                            "text": "Option 2"
+                            "text": myArray[0].option_2
                         },
                         "accessory": {
                             "type": "button",
-                            "action_id": "incorrect",
+                            "action_id": option_2,
                             "text": {
                                 "type": "plain_text",                                
                                 "emoji": true,
@@ -365,11 +400,11 @@ app.command('/postquestion', async ({ ack, payload, context }) => {
                         "type": "section",
                         "text": {
                             "type": "mrkdwn",
-                            "text": "Option 3"
+                            "text": myArray[0].option_3
                         },
                         "accessory": {
                             "type": "button",
-                            "action_id": "incorrect",
+                            "action_id": option_3,
                             "text": {
                                 "type": "plain_text",
                                 "emoji": true,
@@ -382,11 +417,11 @@ app.command('/postquestion', async ({ ack, payload, context }) => {
                         "type": "section",
                         "text": {
                             "type": "mrkdwn",
-                            "text": "Option 4"
+                            "text": myArray[0].option_4
                         },
                         "accessory": {
                             "type": "button",
-                            "action_id": "correct",
+                            "action_id": option_4,
                             "text": {
                                 "type": "plain_text",
                                 "emoji": true,
