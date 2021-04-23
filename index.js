@@ -133,9 +133,10 @@ app.command('/createquestion', async ({ ack, payload, context }) => {
                     },
                     {
                         "type": "input",
+                        "block_id": "question_input",
                         "element": {
-                            "type": "multi_channels_select",
-                            "action_id": "channels",
+                            "type": "plain_text_input",
+                            "action_id": "question",
                             "placeholder": {
                                 "type": "plain_text",
                                 "text": "type question here..."
@@ -148,6 +149,7 @@ app.command('/createquestion', async ({ ack, payload, context }) => {
                     },
                     {
                         "type": "input",
+                        "block_id": "option_1_input",
                         "element": {
                             "type": "plain_text_input",
                             "action_id": "option_1",
@@ -163,6 +165,7 @@ app.command('/createquestion', async ({ ack, payload, context }) => {
                     },
                     {
                         "type": "input",
+                        "block_id": "option_2_input",
                         "element": {
                             "type": "plain_text_input",
                             "action_id": "option_2",
@@ -178,6 +181,7 @@ app.command('/createquestion', async ({ ack, payload, context }) => {
                     },
                     {
                         "type": "input",
+                        "block_id": "option_3_input",
                         "element": {
                             "type": "plain_text_input",
                             "action_id": "option_3",
@@ -193,6 +197,7 @@ app.command('/createquestion', async ({ ack, payload, context }) => {
                     },
                     {
                         "type": "input",
+                        "block_id": "option_4_input",
                         "element": {
                             "type": "plain_text_input",
                             "action_id": "option_4",
@@ -208,8 +213,10 @@ app.command('/createquestion', async ({ ack, payload, context }) => {
                     },
                     {
                         "type": "input",
+                        "block_id": "correct_ans_input",
                         "element": {
                             "type": "static_select",
+                            "action_id": "correct_ans",
                             "placeholder": {
                                 "type": "plain_text",
                                 "text": "select the correct option...",
@@ -222,7 +229,7 @@ app.command('/createquestion', async ({ ack, payload, context }) => {
                                         "text": "Option 1",
                                         "emoji": true
                                     },
-                                    "value": "value-1"
+                                    "value": "Option 1"
                                 },
                                 {
                                     "text": {
@@ -230,7 +237,7 @@ app.command('/createquestion', async ({ ack, payload, context }) => {
                                         "text": "Option 2",
                                         "emoji": true
                                     },
-                                    "value": "value-2"
+                                    "value": "Option 2"
                                 },
                                 {
                                     "text": {
@@ -238,7 +245,7 @@ app.command('/createquestion', async ({ ack, payload, context }) => {
                                         "text": "Option 3",
                                         "emoji": true
                                     },
-                                    "value": "value-3"
+                                    "value": "Option 3"
                                 },
                                 {
                                     "text": {
@@ -246,10 +253,9 @@ app.command('/createquestion', async ({ ack, payload, context }) => {
                                         "text": "Option 4",
                                         "emoji": true
                                     },
-                                    "value": "value-4"
+                                    "value": "Option 4"
                                 }
                             ],
-                            "action_id": "static_select-action"
                         },
                         "label": {
                             "type": "plain_text",
@@ -272,11 +278,23 @@ app.command('/createquestion', async ({ ack, payload, context }) => {
 
 app.view('submit_question', ({ ack, body, view, context}) => {
     ack();
-    const title = view['state']['values']['title_input']['title'];
-    console.log("Title: ", title);
+    //const title = view['state']['values']['title_input']['title'];
+    //console.log("Title: ", title);
+    //console.log("Correct Ans: ", view['state']['values']['correct_ans_input']['correct_ans']);
+    //console.log(view);
+    //console.log(body);
+    //console.log(context);
+    //console.log("Correct Ans: ", view['state']['values']['correct_ans_input']['correct_ans'].selected_option.value);
     var db = firebase.firestore();
-    db.collection("questions").add({
-        title: view['state']['values']['title_input']['title'].value
+    db.collection(body['user']['id']).add({
+        title: view['state']['values']['title_input']['title'].value,
+        question: view['state']['values']['question_input']['question'].value,
+        option_1: view['state']['values']['option_1_input']['option_1'].value,
+        option_2: view['state']['values']['option_2_input']['option_2'].value,
+        option_3: view['state']['values']['option_3_input']['option_3'].value,
+        option_4: view['state']['values']['option_4_input']['option_4'].value,
+        correct_ans: view['state']['values']['correct_ans_input']['correct_ans'].selected_option.value,
+        user: body['user']['username']
     })
 });
 
