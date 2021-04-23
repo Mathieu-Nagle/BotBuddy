@@ -299,6 +299,7 @@ app.view('submit_question', ({ ack, body, view, context}) => {
         correct_ans: view['state']['values']['correct_ans_input']['correct_ans'].selected_option.value,
         user: body['user']['username']
     })
+});
 
 app.command('/postquestion', async ({ ack, payload, context }) => {
     ack();
