@@ -90,6 +90,7 @@ app.command('/helloworld', async ({ ack, payload, context }) => {
               submit: {
                 type: 'plain_text',
                 text: 'Submit'
+                
               }
             }
           });
@@ -277,6 +278,7 @@ app.command('/createquestion', async ({ ack, payload, context }) => {
     }
 });
 
+
 app.view('submit_question', ({ ack, body, view, context}) => {
     ack();
     //const title = view['state']['values']['title_input']['title'];
@@ -297,6 +299,119 @@ app.view('submit_question', ({ ack, body, view, context}) => {
         correct_ans: view['state']['values']['correct_ans_input']['correct_ans'].selected_option.value,
         user: body['user']['username']
     })
+
+app.command('/postquestion', async ({ ack, payload, context }) => {
+    ack();
+    try {
+        const result = await app.client.chat.postMessage({
+            token: context.botToken,
+            channel: payload.channel_id,
+                blocks: [
+                    {
+                        "type": "header",
+                        "text": {
+                            "type": "plain_text",
+                            "emoji": true,
+                            "text": "Question goes here"
+                        }
+                    },
+                    {
+                        "type": "divider"
+                    },
+                    {
+                        "type": "section",
+                        "text": {
+                            "type": "plain_text",
+                            "text": "Answers",
+                            "emoji": true
+                        }
+                    },
+                    {
+                        "type": "section",
+                        "text": {
+                            "type": "mrkdwn",
+                            "text": "Option 1"
+                        },
+                        "accessory": {
+                            "type": "button",
+                            "action_id": "incorrect",
+                            "text": {
+                                "type": "plain_text",
+                                "emoji": true,
+                                "text": "Choose"
+                            },
+                            "value": "click_me_123"
+                        }
+                    },
+                    {
+                        "type": "section",
+                        "text": {
+                            "type": "mrkdwn",
+                            "text": "Option 2"
+                        },
+                        "accessory": {
+                            "type": "button",
+                            "action_id": "incorrect",
+                            "text": {
+                                "type": "plain_text",                                
+                                "emoji": true,
+                                "text": "Choose"
+                            },
+                            "value": "click_me_123"
+                        }
+                    },
+                    {
+                        "type": "section",
+                        "text": {
+                            "type": "mrkdwn",
+                            "text": "Option 3"
+                        },
+                        "accessory": {
+                            "type": "button",
+                            "action_id": "incorrect",
+                            "text": {
+                                "type": "plain_text",
+                                "emoji": true,
+                                "text": "Choose"
+                            },
+                            "value": "click_me_123"
+                        }
+                    },
+                    {
+                        "type": "section",
+                        "text": {
+                            "type": "mrkdwn",
+                            "text": "Option 4"
+                        },
+                        "accessory": {
+                            "type": "button",
+                            "action_id": "correct",
+                            "text": {
+                                "type": "plain_text",
+                                "emoji": true,
+                                "text": "Choose"
+                            },
+                            "value": "click_me_123"
+                        }
+                    }
+                ]
+            })
+        }
+    catch(error) {
+        console.error(error);
+    }
+})
+
+app.action('correct', async ({ ack, say }) => {
+    // Acknowledge action request
+    await ack();
+    await say('Good job 👍');
+});
+
+app.action('incorrect', async ({ ack, say }) => {
+    // Acknowledge action request
+    await ack();
+    await say('Bad job :-1:');
 });
 
 app.message(':wave:', async ({ message, say }) => {
@@ -334,6 +449,7 @@ app.event('app_home_opened', async ({ event, client, context}) => {
                         "elements": [
                             {
                                 "type": "button",
+                                "action_id": "test",
                                 "text": {
                                     "type": "plain_text",
                                     "text": "Click me!"
