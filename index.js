@@ -309,12 +309,29 @@ app.command('/postquestion', async ({ ack, body, view, payload, context, say, cl
     const dbRef = db.collection(body['user_id']);
     const snapshot  = await dbRef.where('title', '==', payload.text).get();
     const myArray = []
+
+    const userId = body['user_id'];
+    const channelId = body['channel_id'];
+
+    
+    if (payload.text == '') {
+        const noText = await dbRef.get();
+        noText.forEach(doc => {
+            myArray.push(doc.data().title);
+        });
+        var listOfTitles = 'Your questions are: ' + myArray.join(', ');
+        console.log(listOfTitles);
+
+        const response = client.chat.postEphemeral({
+            channel: channelId,
+            user: userId,
+            text: listOfTitles
+        });
+        return;
+    }
     // console.log(body);
     // console.log(snapshot.user);
     if (snapshot.empty) {
-        const userId = body['user_id'];
-        const channelId = body['channel_id'];
-
         const response = client.chat.postEphemeral({
             channel: channelId,
             user: userId,
