@@ -301,7 +301,7 @@ app.view('submit_question', ({ ack, body, view, context}) => {
     })
 });
 
-app.command('/postquestion', async ({ ack, body, view, payload, context, say }) => {
+app.command('/postquestion', async ({ ack, body, view, payload, context, say, client }) => {
     ack();
     // console.log(body['user_id']);
     var db = firebase.firestore();
@@ -309,12 +309,20 @@ app.command('/postquestion', async ({ ack, body, view, payload, context, say }) 
     const dbRef = db.collection(body['user_id']);
     const snapshot  = await dbRef.where('title', '==', payload.text).get();
     const myArray = []
-    
+    // console.log(body);
     // console.log(snapshot.user);
     if (snapshot.empty) {
-        await say('No matching documents.');
+        const userId = body['user_id'];
+        const channelId = body['channel_id'];
+
+        const response = client.chat.postEphemeral({
+            channel: channelId,
+            user: userId,
+            text: 'No matching documents.'
+        });
+        // await say('No matching documents.');
         return;
-      }  
+    }  
       
       snapshot.forEach(doc => {
         myArray.push(doc.data());
@@ -438,16 +446,32 @@ app.command('/postquestion', async ({ ack, body, view, payload, context, say }) 
     }
 })
 
-app.action('correct', async ({ ack, say }) => {
+app.action('correct', async ({ ack, say, client, body }) => {
     // Acknowledge action request
     await ack();
-    await say('Good job 👍');
+    const userId = body['user']['id'];
+    const channelId = body['container']['channel_id'];
+
+    const response = client.chat.postEphemeral({
+        channel: channelId,
+        user: userId,
+        text: 'Good job :+1:'
+      });
+    // await say('Good job 👍');
 });
 
-app.action('incorrect', async ({ ack, say }) => {
+app.action('incorrect', async ({ ack, say, client, body }) => {
     // Acknowledge action request
     await ack();
-    await say('Bad job :-1:');
+    const userId = body['user']['id'];
+    const channelId = body['container']['channel_id'];
+
+    const response = client.chat.postEphemeral({
+        channel: channelId,
+        user: userId,
+        text: 'Bad job :-1:'
+      });
+    // await say('Bad job :-1:');
 });
 
 app.message(':wave:', async ({ message, say }) => {
