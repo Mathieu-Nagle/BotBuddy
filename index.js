@@ -1,4 +1,5 @@
 require('dotenv').config();
+const fetch = require('node-fetch');
 const { WebClient } = require('@slack/web-api');
 const { createEventAdapter } = require('@slack/events-api');
 const { App } = require('@slack/bolt');
@@ -11,6 +12,7 @@ require("firebase/firestore");
 const slackSigningSecret = process.env.SLACK_SIGNING_SECRET;
 const slackBotToken = process.env.SLACK_BOT_TOKEN;
 const port = process.env.SLACK_PORT || 3000;
+const giphyApi = process.env.GIPHY_API_KEY;
 
 const slackEvents = createEventAdapter(slackSigningSecret);
 const slackClient = new WebClient(slackBotToken);
@@ -301,7 +303,7 @@ app.view('submit_question', ({ ack, body, view, context}) => {
     })
 });
 
-app.command('/postquestion', async ({ ack, body, view, payload, context, say }) => {
+app.command('/postquestion', async ({ ack, body, view, payload, context, say, client }) => {
     ack();
     // console.log(body['user_id']);
     var db = firebase.firestore();
@@ -309,12 +311,38 @@ app.command('/postquestion', async ({ ack, body, view, payload, context, say }) 
     const dbRef = db.collection(body['user_id']);
     const snapshot  = await dbRef.where('title', '==', payload.text).get();
     const myArray = []
+
+    const userId = body['user_id'];
+    const channelId = body['channel_id'];
+
     
+    if (payload.text == '') {
+        const noText = await dbRef.get();
+        noText.forEach(doc => {
+            myArray.push(doc.data().title);
+        });
+
+        var listOfTitles = 'Your questions are: ' + myArray.join(', ');
+        // console.log(listOfTitles);
+
+        const response = client.chat.postEphemeral({
+            channel: channelId,
+            user: userId,
+            text: listOfTitles
+        });
+        return;
+    }
+    // console.log(body);
     // console.log(snapshot.user);
     if (snapshot.empty) {
-        await say('No matching documents.');
+        const response = client.chat.postEphemeral({
+            channel: channelId,
+            user: userId,
+            text: 'No matching documents.'
+        });
+        // await say('No matching documents.');
         return;
-      }  
+    }  
       
       snapshot.forEach(doc => {
         myArray.push(doc.data());
@@ -438,16 +466,60 @@ app.command('/postquestion', async ({ ack, body, view, payload, context, say }) 
     }
 })
 
-app.action('correct', async ({ ack, say }) => {
+app.action('correct', async ({ ack, say, client, body }) => {
     // Acknowledge action request
     await ack();
-    await say('Good job 👍');
+    const userId = body['user']['id'];
+    const channelId = body['container']['channel_id'];
+
+    var randomOffset = Math.floor(Math.random() * 100) + 1;
+    let gif = `https://api.giphy.com/v1/gifs/search?api_key=${giphyApi}&limit=1&q=fireworks&offset=${randomOffset}`;
+    fetch(gif)
+    .then(gifResponse => gifResponse.json())
+    .then(content => {
+        var embed = content.data[0].images.downsized.url;
+
+        const response = client.chat.postEphemeral({
+            channel: channelId,
+            user: userId,
+            attachments: [
+                {
+                    "fallback": "correct",
+                    "color": "#36a64f",
+                    "pretext": "Great Job:tada::tada::tada:",
+                    "image_url": embed
+                }
+            ]
+        });
+    })
 });
 
-app.action('incorrect', async ({ ack, say }) => {
+app.action('incorrect', async ({ ack, say, client, body }) => {
     // Acknowledge action request
     await ack();
-    await say('Bad job :-1:');
+    const userId = body['user']['id'];
+    const channelId = body['container']['channel_id'];
+
+    var randomOffset = Math.floor(Math.random() * 100) + 1;
+    let gif = `https://api.giphy.com/v1/gifs/search?api_key=${giphyApi}&limit=1&q=motivation&offset=${randomOffset}`;
+    fetch(gif)
+    .then(gifResponse => gifResponse.json())
+    .then(content => {
+        var embed = content.data[0].images.downsized.url;
+
+        const response = client.chat.postEphemeral({
+            channel: channelId,
+            user: userId,
+            attachments: [
+                {
+                    "fallback": 'incorrect',
+                    "color": '#dd312d',
+                    "pretext": 'Hint goes here',
+                    "image_url": embed
+                }
+            ]
+        });
+    })
 });
 
 app.message(':wave:', async ({ message, say }) => {
