@@ -152,6 +152,24 @@ app.command('/createquestion', async ({ ack, payload, context }) => {
                         }
                     },
                     {
+                        "type": "divider"
+                    },
+                    // {
+                    //     "type": "header",
+                    //     "text": {
+                    //         "type": "plain_text",
+                    //         "text": "Choices",
+                    //         "emoji": true
+                    //     }
+                    // },
+                    // {
+                    //     "type": "section",
+                    //     "text": {
+                    //         "type": "mrkdwn",
+                    //         "text": "*Choices*"
+                    //     }
+                    // },
+                    {
                         "type": "input",
                         "block_id": "option_1_input",
                         "element": {
@@ -164,7 +182,7 @@ app.command('/createquestion', async ({ ack, payload, context }) => {
                         },
                         "label": {
                             "type": "plain_text",
-                            "text": "Option 1"
+                            "text": "Choices"
                         }
                     },
                     {
@@ -180,7 +198,7 @@ app.command('/createquestion', async ({ ack, payload, context }) => {
                         },
                         "label": {
                             "type": "plain_text",
-                            "text": "Option 2"
+                            "text": " "
                         }
                     },
                     {
@@ -196,7 +214,7 @@ app.command('/createquestion', async ({ ack, payload, context }) => {
                         },
                         "label": {
                             "type": "plain_text",
-                            "text": "Option 3"
+                            "text": " "
                         }
                     },
                     {
@@ -212,7 +230,7 @@ app.command('/createquestion', async ({ ack, payload, context }) => {
                         },
                         "label": {
                             "type": "plain_text",
-                            "text": "Option 4"
+                            "text": " "
                         }
                     },
                     {
@@ -263,8 +281,74 @@ app.command('/createquestion', async ({ ack, payload, context }) => {
                         },
                         "label": {
                             "type": "plain_text",
-                            "text": "Correct Option",
+                            "text": "Correct Choice",
                             "emoji": true
+                        }
+                    },
+                    {
+                        "type": "divider"
+                    },
+                    // {
+                    //     "type": "header",
+                    //     "text": {
+                    //         "type": "plain_text",
+                    //         "text": "Hints",
+                    //         "emoji": true
+                    //     }
+                    // },
+                    // {
+                    //     "type": "section",
+                    //     "text": {
+                    //         "type": "mrkdwn",
+                    //         "text": "*Hints*"
+                    //     }
+                    // },
+                    {
+                        "type": "input",
+                        "block_id": "hint_1_input",
+                        "element": {
+                            "type": "plain_text_input",
+                            "action_id": "hint_1",
+                            "placeholder": {
+                                "type": "plain_text",
+                                "text": "type hint 1 here..."
+                            }
+                        },
+                        "label": {
+                            "type": "plain_text",
+                            "text": "Hints"
+                        }
+                    },
+                    {
+                        "type": "input",
+                        "block_id": "hint_2_input",
+                        "element": {
+                            "type": "plain_text_input",
+                            "action_id": "hint_2",
+                            "placeholder": {
+                                "type": "plain_text",
+                                "text": "type hint 2 here..."
+                            }
+                        },
+                        "label": {
+                            "type": "plain_text",
+                            "text": " "
+                        }
+                    },
+                    {
+                        "type": "input",
+                        "block_id": "hint_3_input",
+                        "element": {
+                            "type": "plain_text_input",
+                            "action_id": "hint_3",
+                            "placeholder": {
+                                "type": "plain_text",
+                                "text": "type hint 3 here..."
+                            }
+                        },
+                        "label": {
+                            "type": "plain_text",
+                            "text": " "
                         }
                     }
                 ],
@@ -299,7 +383,10 @@ app.view('submit_question', ({ ack, body, view, context}) => {
         option_3: view['state']['values']['option_3_input']['option_3'].value,
         option_4: view['state']['values']['option_4_input']['option_4'].value,
         correct_ans: view['state']['values']['correct_ans_input']['correct_ans'].selected_option.value,
-        user: body['user']['username']
+        user: body['user']['username'],
+        hint_1: view['state']['values']['hint_1_input']['hint_1'].value,
+        hint_2: view['state']['values']['hint_2_input']['hint_2'].value,
+        hint_3: view['state']['values']['hint_3_input']['hint_3'].value
     })
 });
 
@@ -352,20 +439,35 @@ app.command('/postquestion', async ({ ack, body, view, payload, context, say, cl
       var option_2 = "incorrect";
       var option_3 = "incorrect";
       var option_4 = "incorrect";
+      var option_1_value;
+      var option_2_value;
+      var option_3_value;
+      var option_4_value;
       if (myArray[0].correct_ans == 'Option 1') {
         option_1 = "correct";
+        option_2_value = myArray[0].hint_1;
+        option_3_value = myArray[0].hint_2;
+        option_4_value = myArray[0].hint_3;
       }
       else if (myArray[0].correct_ans == 'Option 2') {
         option_2 = "correct";
+        option_1_value = myArray[0].hint_1;
+        option_3_value = myArray[0].hint_2;
+        option_4_value = myArray[0].hint_3;
       }
       else if (myArray[0].correct_ans == 'Option 3') {
         option_3 = "correct";
+        option_1_value = myArray[0].hint_1;
+        option_2_value = myArray[0].hint_2;
+        option_4_value = myArray[0].hint_3;
       }
       else if (myArray[0].correct_ans == 'Option 4') {
         option_4 = "correct";
+        option_1_value = myArray[0].hint_1;
+        option_2_value = myArray[0].hint_2;
+        option_3_value = myArray[0].hint_3;
       }
       
-
     try {
         const result = await app.client.chat.postMessage({
             token: context.botToken,
@@ -382,14 +484,21 @@ app.command('/postquestion', async ({ ack, body, view, payload, context, say, cl
                     {
                         "type": "divider"
                     },
-                    {
-                        "type": "section",
-                        "text": {
-                            "type": "plain_text",
-                            "text": "Answers",
-                            "emoji": true
-                        }
-                    },
+                    // {
+                    //     "type": "header",
+                    //     "text": {
+                    //         "type": "plain_text",
+                    //         "text": "Answers",
+                    //         "emoji": true
+                    //     }
+                    // },
+                    // {
+                    //     "type": "section",
+                    //     "text": {
+                    //         "type": "mrkdwn",
+                    //         "text": "*Answers*"
+                    //     }
+                    // },
                     {
                         "type": "section",
                         "text": {
@@ -404,7 +513,7 @@ app.command('/postquestion', async ({ ack, body, view, payload, context, say, cl
                                 "emoji": true,
                                 "text": "Choose"
                             },
-                            "value": "click_me_123"
+                            "value": option_1_value
                         }
                     },
                     {
@@ -421,7 +530,7 @@ app.command('/postquestion', async ({ ack, body, view, payload, context, say, cl
                                 "emoji": true,
                                 "text": "Choose"
                             },
-                            "value": "click_me_123"
+                            "value": option_2_value
                         }
                     },
                     {
@@ -438,7 +547,7 @@ app.command('/postquestion', async ({ ack, body, view, payload, context, say, cl
                                 "emoji": true,
                                 "text": "Choose"
                             },
-                            "value": "click_me_123"
+                            "value": option_3_value
                         }
                     },
                     {
@@ -455,7 +564,7 @@ app.command('/postquestion', async ({ ack, body, view, payload, context, say, cl
                                 "emoji": true,
                                 "text": "Choose"
                             },
-                            "value": "click_me_123"
+                            "value": option_4_value
                         }
                     }
                 ]
@@ -473,7 +582,7 @@ app.action('correct', async ({ ack, say, client, body }) => {
     const channelId = body['container']['channel_id'];
 
     var randomOffset = Math.floor(Math.random() * 100) + 1;
-    let gif = `https://api.giphy.com/v1/gifs/search?api_key=${giphyApi}&limit=1&q=fireworks&offset=${randomOffset}`;
+    let gif = `https://api.giphy.com/v1/gifs/search?api_key=${giphyApi}&limit=1&q=congrats&offset=${randomOffset}&rating=pg`;
     fetch(gif)
     .then(gifResponse => gifResponse.json())
     .then(content => {
@@ -494,18 +603,20 @@ app.action('correct', async ({ ack, say, client, body }) => {
     })
 });
 
-app.action('incorrect', async ({ ack, say, client, body }) => {
+app.action('incorrect', async ({ ack, say, client, body, payload }) => {
     // Acknowledge action request
     await ack();
     const userId = body['user']['id'];
     const channelId = body['container']['channel_id'];
 
-    var randomOffset = Math.floor(Math.random() * 100) + 1;
-    let gif = `https://api.giphy.com/v1/gifs/search?api_key=${giphyApi}&limit=1&q=motivation&offset=${randomOffset}`;
-    fetch(gif)
-    .then(gifResponse => gifResponse.json())
-    .then(content => {
-        var embed = content.data[0].images.downsized.url;
+    // console.log(payload);
+
+    // var randomOffset = Math.floor(Math.random() * 100) + 1;
+    // let gif = `https://api.giphy.com/v1/gifs/search?api_key=${giphyApi}&limit=1&q=motivation&offset=${randomOffset}&rating=pg`;
+    // fetch(gif)
+    // .then(gifResponse => gifResponse.json())
+    // .then(content => {
+    //     var embed = content.data[0].images.downsized.url;
 
         const response = client.chat.postEphemeral({
             channel: channelId,
@@ -514,12 +625,12 @@ app.action('incorrect', async ({ ack, say, client, body }) => {
                 {
                     "fallback": 'incorrect',
                     "color": '#dd312d',
-                    "pretext": 'Hint goes here',
-                    "image_url": embed
+                    "pretext": "Here's a hint: "+ payload.value,
+                    // "image_url": embed
                 }
             ]
         });
-    })
+    // })
 });
 
 app.message(':wave:', async ({ message, say }) => {
