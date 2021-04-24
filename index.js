@@ -1,4 +1,5 @@
 require('dotenv').config();
+const fetch = require('node-fetch');
 const { WebClient } = require('@slack/web-api');
 const { createEventAdapter } = require('@slack/events-api');
 const { App } = require('@slack/bolt');
@@ -11,6 +12,7 @@ require("firebase/firestore");
 const slackSigningSecret = process.env.SLACK_SIGNING_SECRET;
 const slackBotToken = process.env.SLACK_BOT_TOKEN;
 const port = process.env.SLACK_PORT || 3000;
+const giphyApi = process.env.GIPHY_API_KEY;
 
 const slackEvents = createEventAdapter(slackSigningSecret);
 const slackClient = new WebClient(slackBotToken);
@@ -319,8 +321,9 @@ app.command('/postquestion', async ({ ack, body, view, payload, context, say, cl
         noText.forEach(doc => {
             myArray.push(doc.data().title);
         });
+
         var listOfTitles = 'Your questions are: ' + myArray.join(', ');
-        console.log(listOfTitles);
+        // console.log(listOfTitles);
 
         const response = client.chat.postEphemeral({
             channel: channelId,
@@ -469,19 +472,26 @@ app.action('correct', async ({ ack, say, client, body }) => {
     const userId = body['user']['id'];
     const channelId = body['container']['channel_id'];
 
-    const response = client.chat.postEphemeral({
-        channel: channelId,
-        user: userId,
-        attachments: [
-            {
-                "fallback": "correct",
-                "color": "#36a64f",
-                "pretext": "Great Job:tada::tada::tada:",
-                "image_url": "https://media2.giphy.com/media/26tOZ42Mg6pbTUPHW/giphy.gif"
-            }
-        ]
-      });
-    // await say('Good job 👍');
+    var randomOffset = Math.floor(Math.random() * 100) + 1;
+    let gif = `https://api.giphy.com/v1/gifs/search?api_key=${giphyApi}&limit=1&q=fireworks&offset=${randomOffset}`;
+    fetch(gif)
+    .then(gifResponse => gifResponse.json())
+    .then(content => {
+        var embed = content.data[0].images.downsized.url;
+
+        const response = client.chat.postEphemeral({
+            channel: channelId,
+            user: userId,
+            attachments: [
+                {
+                    "fallback": "correct",
+                    "color": "#36a64f",
+                    "pretext": "Great Job:tada::tada::tada:",
+                    "image_url": embed
+                }
+            ]
+        });
+    })
 });
 
 app.action('incorrect', async ({ ack, say, client, body }) => {
@@ -490,19 +500,26 @@ app.action('incorrect', async ({ ack, say, client, body }) => {
     const userId = body['user']['id'];
     const channelId = body['container']['channel_id'];
 
-    const response = client.chat.postEphemeral({
-        channel: channelId,
-        user: userId,
-        attachments: [
-            {
-                "fallback": 'incorrect',
-                "color": '#dd312d',
-                "pretext": "Here's a hint:",
-                "image_url": 'https://images-na.ssl-images-amazon.com/images/I/91CojPTqKjL._AC_SL1500_.jpg'
-            }
-        ]
-      });
-    // await say('Bad job :-1:');
+    var randomOffset = Math.floor(Math.random() * 100) + 1;
+    let gif = `https://api.giphy.com/v1/gifs/search?api_key=${giphyApi}&limit=1&q=motivation&offset=${randomOffset}`;
+    fetch(gif)
+    .then(gifResponse => gifResponse.json())
+    .then(content => {
+        var embed = content.data[0].images.downsized.url;
+
+        const response = client.chat.postEphemeral({
+            channel: channelId,
+            user: userId,
+            attachments: [
+                {
+                    "fallback": 'incorrect',
+                    "color": '#dd312d',
+                    "pretext": 'Hint goes here',
+                    "image_url": embed
+                }
+            ]
+        });
+    })
 });
 
 app.message(':wave:', async ({ message, say }) => {
