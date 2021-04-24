@@ -152,6 +152,24 @@ app.command('/createquestion', async ({ ack, payload, context }) => {
                         }
                     },
                     {
+                        "type": "divider"
+                    },
+                    {
+                        "type": "header",
+                        "text": {
+                            "type": "plain_text",
+                            "text": "Input options",
+                            "emoji": true
+                        }
+                    },
+                    {
+                        "type": "section",
+                        "text": {
+                            "type": "mrkdwn",
+                            "text": "*Input options*"
+                        }
+                    },
+                    {
                         "type": "input",
                         "block_id": "option_1_input",
                         "element": {
@@ -164,7 +182,7 @@ app.command('/createquestion', async ({ ack, payload, context }) => {
                         },
                         "label": {
                             "type": "plain_text",
-                            "text": "Option 1"
+                            "text": " "
                         }
                     },
                     {
@@ -180,7 +198,7 @@ app.command('/createquestion', async ({ ack, payload, context }) => {
                         },
                         "label": {
                             "type": "plain_text",
-                            "text": "Option 2"
+                            "text": " "
                         }
                     },
                     {
@@ -196,7 +214,7 @@ app.command('/createquestion', async ({ ack, payload, context }) => {
                         },
                         "label": {
                             "type": "plain_text",
-                            "text": "Option 3"
+                            "text": " "
                         }
                     },
                     {
@@ -212,7 +230,7 @@ app.command('/createquestion', async ({ ack, payload, context }) => {
                         },
                         "label": {
                             "type": "plain_text",
-                            "text": "Option 4"
+                            "text": " "
                         }
                     },
                     {
@@ -266,6 +284,72 @@ app.command('/createquestion', async ({ ack, payload, context }) => {
                             "text": "Correct Option",
                             "emoji": true
                         }
+                    },
+                    {
+                        "type": "divider"
+                    },
+                    {
+                        "type": "header",
+                        "text": {
+                            "type": "plain_text",
+                            "text": "Input hints",
+                            "emoji": true
+                        }
+                    },
+                    {
+                        "type": "section",
+                        "text": {
+                            "type": "mrkdwn",
+                            "text": "*Input hints*"
+                        }
+                    },
+                    {
+                        "type": "input",
+                        "block_id": "hint_1_input",
+                        "element": {
+                            "type": "plain_text_input",
+                            "action_id": "hint_1",
+                            "placeholder": {
+                                "type": "plain_text",
+                                "text": "type hint 1 here..."
+                            }
+                        },
+                        "label": {
+                            "type": "plain_text",
+                            "text": " "
+                        }
+                    },
+                    {
+                        "type": "input",
+                        "block_id": "hint_2_input",
+                        "element": {
+                            "type": "plain_text_input",
+                            "action_id": "hint_2",
+                            "placeholder": {
+                                "type": "plain_text",
+                                "text": "type hint 2 here..."
+                            }
+                        },
+                        "label": {
+                            "type": "plain_text",
+                            "text": " "
+                        }
+                    },
+                    {
+                        "type": "input",
+                        "block_id": "hint_3_input",
+                        "element": {
+                            "type": "plain_text_input",
+                            "action_id": "hint_3",
+                            "placeholder": {
+                                "type": "plain_text",
+                                "text": "type hint 3 here..."
+                            }
+                        },
+                        "label": {
+                            "type": "plain_text",
+                            "text": " "
+                        }
                     }
                 ],
                 "type": "modal",
@@ -299,7 +383,10 @@ app.view('submit_question', ({ ack, body, view, context}) => {
         option_3: view['state']['values']['option_3_input']['option_3'].value,
         option_4: view['state']['values']['option_4_input']['option_4'].value,
         correct_ans: view['state']['values']['correct_ans_input']['correct_ans'].selected_option.value,
-        user: body['user']['username']
+        user: body['user']['username'],
+        hint_1: view['state']['values']['hint_1_input']['hint_1'].value,
+        hint_2: view['state']['values']['hint_2_input']['hint_2'].value,
+        hint_3: view['state']['values']['hint_3_input']['hint_3'].value
     })
 });
 
@@ -383,11 +470,18 @@ app.command('/postquestion', async ({ ack, body, view, payload, context, say, cl
                         "type": "divider"
                     },
                     {
-                        "type": "section",
+                        "type": "header",
                         "text": {
                             "type": "plain_text",
                             "text": "Answers",
                             "emoji": true
+                        }
+                    },
+                    {
+                        "type": "section",
+                        "text": {
+                            "type": "mrkdwn",
+                            "text": "*Answers*"
                         }
                     },
                     {
