@@ -154,21 +154,21 @@ app.command('/createquestion', async ({ ack, payload, context }) => {
                     {
                         "type": "divider"
                     },
-                    {
-                        "type": "header",
-                        "text": {
-                            "type": "plain_text",
-                            "text": "Input options",
-                            "emoji": true
-                        }
-                    },
-                    {
-                        "type": "section",
-                        "text": {
-                            "type": "mrkdwn",
-                            "text": "*Input options*"
-                        }
-                    },
+                    // {
+                    //     "type": "header",
+                    //     "text": {
+                    //         "type": "plain_text",
+                    //         "text": "Choices",
+                    //         "emoji": true
+                    //     }
+                    // },
+                    // {
+                    //     "type": "section",
+                    //     "text": {
+                    //         "type": "mrkdwn",
+                    //         "text": "*Choices*"
+                    //     }
+                    // },
                     {
                         "type": "input",
                         "block_id": "option_1_input",
@@ -182,7 +182,7 @@ app.command('/createquestion', async ({ ack, payload, context }) => {
                         },
                         "label": {
                             "type": "plain_text",
-                            "text": " "
+                            "text": "Choices"
                         }
                     },
                     {
@@ -281,28 +281,28 @@ app.command('/createquestion', async ({ ack, payload, context }) => {
                         },
                         "label": {
                             "type": "plain_text",
-                            "text": "Correct Option",
+                            "text": "Correct Choice",
                             "emoji": true
                         }
                     },
                     {
                         "type": "divider"
                     },
-                    {
-                        "type": "header",
-                        "text": {
-                            "type": "plain_text",
-                            "text": "Input hints",
-                            "emoji": true
-                        }
-                    },
-                    {
-                        "type": "section",
-                        "text": {
-                            "type": "mrkdwn",
-                            "text": "*Input hints*"
-                        }
-                    },
+                    // {
+                    //     "type": "header",
+                    //     "text": {
+                    //         "type": "plain_text",
+                    //         "text": "Hints",
+                    //         "emoji": true
+                    //     }
+                    // },
+                    // {
+                    //     "type": "section",
+                    //     "text": {
+                    //         "type": "mrkdwn",
+                    //         "text": "*Hints*"
+                    //     }
+                    // },
                     {
                         "type": "input",
                         "block_id": "hint_1_input",
@@ -316,7 +316,7 @@ app.command('/createquestion', async ({ ack, payload, context }) => {
                         },
                         "label": {
                             "type": "plain_text",
-                            "text": " "
+                            "text": "Hints"
                         }
                     },
                     {
@@ -484,21 +484,21 @@ app.command('/postquestion', async ({ ack, body, view, payload, context, say, cl
                     {
                         "type": "divider"
                     },
-                    {
-                        "type": "header",
-                        "text": {
-                            "type": "plain_text",
-                            "text": "Answers",
-                            "emoji": true
-                        }
-                    },
-                    {
-                        "type": "section",
-                        "text": {
-                            "type": "mrkdwn",
-                            "text": "*Answers*"
-                        }
-                    },
+                    // {
+                    //     "type": "header",
+                    //     "text": {
+                    //         "type": "plain_text",
+                    //         "text": "Answers",
+                    //         "emoji": true
+                    //     }
+                    // },
+                    // {
+                    //     "type": "section",
+                    //     "text": {
+                    //         "type": "mrkdwn",
+                    //         "text": "*Answers*"
+                    //     }
+                    // },
                     {
                         "type": "section",
                         "text": {
@@ -582,7 +582,7 @@ app.action('correct', async ({ ack, say, client, body }) => {
     const channelId = body['container']['channel_id'];
 
     var randomOffset = Math.floor(Math.random() * 100) + 1;
-    let gif = `https://api.giphy.com/v1/gifs/search?api_key=${giphyApi}&limit=1&q=fireworks&offset=${randomOffset}`;
+    let gif = `https://api.giphy.com/v1/gifs/search?api_key=${giphyApi}&limit=1&q=congrats&offset=${randomOffset}&rating=pg`;
     fetch(gif)
     .then(gifResponse => gifResponse.json())
     .then(content => {
@@ -609,14 +609,14 @@ app.action('incorrect', async ({ ack, say, client, body, payload }) => {
     const userId = body['user']['id'];
     const channelId = body['container']['channel_id'];
 
-    // console.log(payload.value);
+    // console.log(payload);
 
-    var randomOffset = Math.floor(Math.random() * 100) + 1;
-    let gif = `https://api.giphy.com/v1/gifs/search?api_key=${giphyApi}&limit=1&q=motivation&offset=${randomOffset}`;
-    fetch(gif)
-    .then(gifResponse => gifResponse.json())
-    .then(content => {
-        var embed = content.data[0].images.downsized.url;
+    // var randomOffset = Math.floor(Math.random() * 100) + 1;
+    // let gif = `https://api.giphy.com/v1/gifs/search?api_key=${giphyApi}&limit=1&q=motivation&offset=${randomOffset}&rating=pg`;
+    // fetch(gif)
+    // .then(gifResponse => gifResponse.json())
+    // .then(content => {
+    //     var embed = content.data[0].images.downsized.url;
 
         const response = client.chat.postEphemeral({
             channel: channelId,
@@ -626,11 +626,11 @@ app.action('incorrect', async ({ ack, say, client, body, payload }) => {
                     "fallback": 'incorrect',
                     "color": '#dd312d',
                     "pretext": "Here's a hint: "+ payload.value,
-                    "image_url": embed
+                    // "image_url": embed
                 }
             ]
         });
-    })
+    // })
 });
 
 app.message(':wave:', async ({ message, say }) => {
