@@ -439,20 +439,35 @@ app.command('/postquestion', async ({ ack, body, view, payload, context, say, cl
       var option_2 = "incorrect";
       var option_3 = "incorrect";
       var option_4 = "incorrect";
+      var option_1_value;
+      var option_2_value;
+      var option_3_value;
+      var option_4_value;
       if (myArray[0].correct_ans == 'Option 1') {
         option_1 = "correct";
+        option_2_value = myArray[0].hint_1;
+        option_3_value = myArray[0].hint_2;
+        option_4_value = myArray[0].hint_3;
       }
       else if (myArray[0].correct_ans == 'Option 2') {
         option_2 = "correct";
+        option_1_value = myArray[0].hint_1;
+        option_3_value = myArray[0].hint_2;
+        option_4_value = myArray[0].hint_3;
       }
       else if (myArray[0].correct_ans == 'Option 3') {
         option_3 = "correct";
+        option_1_value = myArray[0].hint_1;
+        option_2_value = myArray[0].hint_2;
+        option_4_value = myArray[0].hint_3;
       }
       else if (myArray[0].correct_ans == 'Option 4') {
         option_4 = "correct";
+        option_1_value = myArray[0].hint_1;
+        option_2_value = myArray[0].hint_2;
+        option_3_value = myArray[0].hint_3;
       }
       
-
     try {
         const result = await app.client.chat.postMessage({
             token: context.botToken,
@@ -498,7 +513,7 @@ app.command('/postquestion', async ({ ack, body, view, payload, context, say, cl
                                 "emoji": true,
                                 "text": "Choose"
                             },
-                            "value": "click_me_123"
+                            "value": option_1_value
                         }
                     },
                     {
@@ -515,7 +530,7 @@ app.command('/postquestion', async ({ ack, body, view, payload, context, say, cl
                                 "emoji": true,
                                 "text": "Choose"
                             },
-                            "value": "click_me_123"
+                            "value": option_2_value
                         }
                     },
                     {
@@ -532,7 +547,7 @@ app.command('/postquestion', async ({ ack, body, view, payload, context, say, cl
                                 "emoji": true,
                                 "text": "Choose"
                             },
-                            "value": "click_me_123"
+                            "value": option_3_value
                         }
                     },
                     {
@@ -549,7 +564,7 @@ app.command('/postquestion', async ({ ack, body, view, payload, context, say, cl
                                 "emoji": true,
                                 "text": "Choose"
                             },
-                            "value": "click_me_123"
+                            "value": option_4_value
                         }
                     }
                 ]
@@ -588,11 +603,13 @@ app.action('correct', async ({ ack, say, client, body }) => {
     })
 });
 
-app.action('incorrect', async ({ ack, say, client, body }) => {
+app.action('incorrect', async ({ ack, say, client, body, payload }) => {
     // Acknowledge action request
     await ack();
     const userId = body['user']['id'];
     const channelId = body['container']['channel_id'];
+
+    // console.log(payload.value);
 
     var randomOffset = Math.floor(Math.random() * 100) + 1;
     let gif = `https://api.giphy.com/v1/gifs/search?api_key=${giphyApi}&limit=1&q=motivation&offset=${randomOffset}`;
@@ -608,7 +625,7 @@ app.action('incorrect', async ({ ack, say, client, body }) => {
                 {
                     "fallback": 'incorrect',
                     "color": '#dd312d',
-                    "pretext": 'Hint goes here',
+                    "pretext": "Here's a hint: "+ payload.value,
                     "image_url": embed
                 }
             ]
