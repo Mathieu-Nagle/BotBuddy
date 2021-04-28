@@ -8,7 +8,6 @@ const { App } = require('@slack/bolt');
 var firebase = require ('firebase/app');
 require("firebase/firestore");
 
-
 const slackSigningSecret = process.env.SLACK_SIGNING_SECRET;
 const slackBotToken = process.env.SLACK_BOT_TOKEN;
 const port = process.env.SLACK_PORT || 3000;
@@ -105,6 +104,9 @@ app.command('/helloworld', async ({ ack, payload, context }) => {
 
 app.command('/createquestion', async ({ ack, payload, context }) => {
     ack();
+
+    const initTitle = payload.text;
+
     try {
         const result = await app.client.views.open({
             token: context.botToken,
@@ -128,7 +130,8 @@ app.command('/createquestion', async ({ ack, payload, context }) => {
                             "placeholder": {
                                 "type": "plain_text",
                                 "text": "type title here..."
-                            }
+                            },
+                            "initial_value": initTitle
                         },
                         "label": {
                             "type": "plain_text",
@@ -364,8 +367,12 @@ app.command('/createquestion', async ({ ack, payload, context }) => {
     }
 });
 
-app.view('submit_question', ({ ack, body, view, context}) => {
+app.view('submit_question', async ({ ack, body, view, context, client }) => {
     ack();
+
+    console.log(view);
+    const userId = body['user']['id'];
+    // const channelId = body['channel_id'];
     //const title = view['state']['values']['title_input']['title'];
     //console.log("Title: ", title);
     //console.log("Correct Ans: ", view['state']['values']['correct_ans_input']['correct_ans']);
@@ -374,19 +381,36 @@ app.view('submit_question', ({ ack, body, view, context}) => {
     //console.log(context);
     //console.log("Correct Ans: ", view['state']['values']['correct_ans_input']['correct_ans'].selected_option.value);
     var db = firebase.firestore();
-    db.collection(body['user']['id']).add({
-        title: view['state']['values']['title_input']['title'].value,
-        question: view['state']['values']['question_input']['question'].value,
-        option_1: view['state']['values']['option_1_input']['option_1'].value,
-        option_2: view['state']['values']['option_2_input']['option_2'].value,
-        option_3: view['state']['values']['option_3_input']['option_3'].value,
-        option_4: view['state']['values']['option_4_input']['option_4'].value,
-        correct_ans: view['state']['values']['correct_ans_input']['correct_ans'].selected_option.value,
-        user: body['user']['username'],
-        hint_1: view['state']['values']['hint_1_input']['hint_1'].value,
-        hint_2: view['state']['values']['hint_2_input']['hint_2'].value,
-        hint_3: view['state']['values']['hint_3_input']['hint_3'].value
-    })
+    const dbRef = db.collection(userId);
+    const title = view['state']['values']['title_input']['title'].value;
+    const snapshot = await dbRef.where('title', '==', title).get();
+    if (snapshot.empty) {
+        db.collection(body['user']['id']).add({
+            title: view['state']['values']['title_input']['title'].value,
+            question: view['state']['values']['question_input']['question'].value,
+            option_1: view['state']['values']['option_1_input']['option_1'].value,
+            option_2: view['state']['values']['option_2_input']['option_2'].value,
+            option_3: view['state']['values']['option_3_input']['option_3'].value,
+            option_4: view['state']['values']['option_4_input']['option_4'].value,
+            correct_ans: view['state']['values']['correct_ans_input']['correct_ans'].selected_option.value,
+            user: body['user']['username'],
+            hint_1: view['state']['values']['hint_1_input']['hint_1'].value,
+            hint_2: view['state']['values']['hint_2_input']['hint_2'].value,
+            hint_3: view['state']['values']['hint_3_input']['hint_3'].value
+        })
+        const response = client.chat.postEphemeral({
+            channel: 'private-testing',
+            user: userId,
+            text: view['state']['values']['title_input']['title'].value + ' saved!'
+        });
+    }
+    else {
+        const response = client.chat.postEphemeral({
+            channel: 'private-testing',
+            user: userId,
+            text: "You already have a question with this title. If you would like to edit it please type '/editquestion " + view['state']['values']['title_input']['title'].value + "'"
+        });
+    }
 });
 
 app.command('/postquestion', async ({ ack, body, view, payload, context, say, client }) => {
@@ -1076,8 +1100,6 @@ app.command('/editquestion', async ({ ack, payload, context, body, client }) => 
     });
 });
 
-
-
 app.message(':wave:', async ({ message, say }) => {
     ack();
     console.log(await say(`Hey there, <@${message.user}>`));
@@ -1130,7 +1152,6 @@ app.event('app_home_opened', async ({ event, client, context}) => {
         console.error(error);
     }
 });
-
 
 (async () => {
     await app.start(process.env.PORT || 3000);
