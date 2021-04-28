@@ -633,6 +633,139 @@ app.action('incorrect', async ({ ack, say, client, body, payload }) => {
     // })
 });
 
+app.command('/deletequestion', async ({ ack, body, view, payload, context, say, client }) => {
+    ack();
+    var db = firebase.firestore();
+    const dbRef = db.collection(body['user_id']);
+    const snapshot  = await dbRef.where('title', '==', payload.text).get();
+    const myArray = []
+
+    const userId = body['user_id'];
+    const channelId = body['channel_id'];
+
+    
+    if (payload.text == '') {
+        const noText = await dbRef.get();
+        noText.forEach(doc => {
+            myArray.push(doc.data().title);
+        });
+
+        var listOfTitles = 'Your questions are: ' + myArray.join(', ');
+        // console.log(listOfTitles);
+
+        const response = client.chat.postEphemeral({
+            channel: channelId,
+            user: userId,
+            text: listOfTitles
+        });
+        return;
+    }
+    // console.log(body);
+    // console.log(snapshot.user);
+    if (snapshot.empty) {
+        const response = client.chat.postEphemeral({
+            channel: channelId,
+            user: userId,
+            text: 'No matching documents.'
+        });
+        // await say('No matching documents.');
+        return;
+    }  
+      
+      snapshot.forEach(doc => {
+        myArray.push(doc.data(), doc.id);
+      });
+      
+    try {
+        const result = await app.client.chat.postMessage({
+            token: context.botToken,
+            channel: payload.channel_id,
+                blocks: [
+                    {
+                        "type": "section",
+                        "text": {
+                            "type": "plain_text",
+                            "emoji": true,
+                            "text": "Are you sure you want to delete '" + myArray[0].title + "'?"
+                        }
+                    },
+                    {
+                        "type": "actions",
+                        "elements": [
+                            {
+                                "type": "button",
+                                "action_id": 'delete',
+                                "text": {
+                                    "type": "plain_text",
+                                    "emoji": true,
+                                    "text": "Yes"
+                                },
+                                "style": "danger",
+                                "value": myArray[1]
+                            },
+                            {
+                                "type": "button",
+                                "action_id": 'dontDelete',
+                                "text": {
+                                    "type": "plain_text",
+                                    "emoji": true,
+                                    "text": "Cancel"
+                                },
+                                "value": myArray[1]
+                            }
+                        ]
+                    }
+                ]
+            })
+        }
+    catch(error) {
+        console.error(error);
+    }
+})
+
+app.action('delete', async ({ ack, say, client, body, payload }) => {
+    // Acknowledge action request
+    await ack();
+    const userId = body['user']['id'];
+    const channelId = body['container']['channel_id'];
+    const messageId = body['message']['ts'];
+    const docId = payload.value;
+
+    const db = firebase.firestore();
+    const dbRef = db.collection(userId);
+    const deleting  = await dbRef.doc(docId).delete();
+
+    client.chat.delete({
+        channel: channelId,
+        ts: messageId
+    });
+
+    const response = client.chat.postEphemeral({
+        channel: channelId,
+        user: userId,
+        text: "Question deleted."
+    });
+});
+
+app.action('dontDelete', async ({ ack, say, client, body }) => {
+    // Acknowledge action request
+    await ack();
+    const userId = body['user']['id'];
+    const channelId = body['container']['channel_id'];
+    const messageId = body['message']['ts'];
+
+    client.chat.delete({
+        channel: channelId,
+        ts: messageId
+    });
+
+    const response = client.chat.postEphemeral({
+        channel: channelId,
+        user: userId,
+        text: "Have a good day!"
+    });
+});
+
 app.message(':wave:', async ({ message, say }) => {
     ack();
     console.log(await say(`Hey there, <@${message.user}>`));
