@@ -590,12 +590,13 @@ app.action('correct', async ({ ack, say, client, body }) => {
 
         const response = client.chat.postEphemeral({
             channel: channelId,
+            icon_emoji: ':botbuddy_green:',
             user: userId,
             attachments: [
                 {
                     "fallback": "correct",
                     "color": "#36a64f",
-                    "pretext": "Great Job:tada::tada::tada:",
+                    "pretext": ":tada:YOU GOT IT RIGHT! GREAT JOB!:tada:",
                     "image_url": embed
                 }
             ]
@@ -620,17 +621,21 @@ app.action('incorrect', async ({ ack, say, client, body, payload }) => {
 
         const response = client.chat.postEphemeral({
             channel: channelId,
+            //as_user: 'false',
+            icon_emoji: ':botbuddy_red:',
+            //icon_url: 'botbuddy_icons/BotBuddy_Red.PNG',
             user: userId,
             attachments: [
                 {
                     "fallback": 'incorrect',
                     "color": '#dd312d',
-                    "pretext": "Here's a hint: "+ payload.value,
+                    "pretext": "Try again! Here's a hint: "+ payload.value,
                     // "image_url": embed
                 }
             ]
         });
     // })
+    console.log(response);
 });
 
 app.message(':wave:', async ({ message, say }) => {
