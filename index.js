@@ -102,9 +102,10 @@ app.command('/helloworld', async ({ ack, payload, context }) => {
     }
 });
 
-app.command('/createquestion', async ({ ack, payload, context }) => {
+app.command('/createquestion', async ({ ack, payload, context, body }) => {
     ack();
 
+    const channelId = body['channel_id'];
     const initTitle = payload.text;
 
     try {
@@ -365,52 +366,51 @@ app.command('/createquestion', async ({ ack, payload, context }) => {
     catch(error) {
         console.error(error);
     }
-});
 
-app.view('submit_question', async ({ ack, body, view, context, client }) => {
-    ack();
-
-    console.log(view);
-    const userId = body['user']['id'];
-    // const channelId = body['channel_id'];
-    //const title = view['state']['values']['title_input']['title'];
-    //console.log("Title: ", title);
-    //console.log("Correct Ans: ", view['state']['values']['correct_ans_input']['correct_ans']);
-    //console.log(view);
-    //console.log(body);
-    //console.log(context);
-    //console.log("Correct Ans: ", view['state']['values']['correct_ans_input']['correct_ans'].selected_option.value);
-    var db = firebase.firestore();
-    const dbRef = db.collection(userId);
-    const title = view['state']['values']['title_input']['title'].value;
-    const snapshot = await dbRef.where('title', '==', title).get();
-    if (snapshot.empty) {
-        db.collection(body['user']['id']).add({
-            title: view['state']['values']['title_input']['title'].value,
-            question: view['state']['values']['question_input']['question'].value,
-            option_1: view['state']['values']['option_1_input']['option_1'].value,
-            option_2: view['state']['values']['option_2_input']['option_2'].value,
-            option_3: view['state']['values']['option_3_input']['option_3'].value,
-            option_4: view['state']['values']['option_4_input']['option_4'].value,
-            correct_ans: view['state']['values']['correct_ans_input']['correct_ans'].selected_option.value,
-            user: body['user']['username'],
-            hint_1: view['state']['values']['hint_1_input']['hint_1'].value,
-            hint_2: view['state']['values']['hint_2_input']['hint_2'].value,
-            hint_3: view['state']['values']['hint_3_input']['hint_3'].value
-        })
-        const response = client.chat.postEphemeral({
-            channel: 'private-testing',
-            user: userId,
-            text: view['state']['values']['title_input']['title'].value + ' saved!'
-        });
-    }
-    else {
-        const response = client.chat.postEphemeral({
-            channel: 'private-testing',
-            user: userId,
-            text: "You already have a question with this title. If you would like to edit it please type '/editquestion " + view['state']['values']['title_input']['title'].value + "'"
-        });
-    }
+    app.view('submit_question', async ({ ack, body, view, context, client }) => {
+        ack();
+    
+        console.log(view);
+        const userId = body['user']['id'];
+        //const title = view['state']['values']['title_input']['title'];
+        //console.log("Title: ", title);
+        //console.log("Correct Ans: ", view['state']['values']['correct_ans_input']['correct_ans']);
+        //console.log(view);
+        //console.log(body);
+        //console.log(context);
+        //console.log("Correct Ans: ", view['state']['values']['correct_ans_input']['correct_ans'].selected_option.value);
+        var db = firebase.firestore();
+        const dbRef = db.collection(userId);
+        const title = view['state']['values']['title_input']['title'].value;
+        const snapshot = await dbRef.where('title', '==', title).get();
+        if (snapshot.empty) {
+            db.collection(body['user']['id']).add({
+                title: view['state']['values']['title_input']['title'].value,
+                question: view['state']['values']['question_input']['question'].value,
+                option_1: view['state']['values']['option_1_input']['option_1'].value,
+                option_2: view['state']['values']['option_2_input']['option_2'].value,
+                option_3: view['state']['values']['option_3_input']['option_3'].value,
+                option_4: view['state']['values']['option_4_input']['option_4'].value,
+                correct_ans: view['state']['values']['correct_ans_input']['correct_ans'].selected_option.value,
+                user: body['user']['username'],
+                hint_1: view['state']['values']['hint_1_input']['hint_1'].value,
+                hint_2: view['state']['values']['hint_2_input']['hint_2'].value,
+                hint_3: view['state']['values']['hint_3_input']['hint_3'].value
+            })
+            const response = client.chat.postEphemeral({
+                channel: channelId,
+                user: userId,
+                text: view['state']['values']['title_input']['title'].value + ' saved!'
+            });
+        }
+        else {
+            const response = client.chat.postEphemeral({
+                channel: channelId,
+                user: userId,
+                text: "You already have a question with this title. If you would like to edit it please type '/editquestion " + view['state']['values']['title_input']['title'].value + "'"
+            });
+        }
+    });
 });
 
 app.command('/postquestion', async ({ ack, body, view, payload, context, say, client }) => {
@@ -1099,6 +1099,39 @@ app.command('/editquestion', async ({ ack, payload, context, body, client }) => 
 
     });
 });
+
+app.command('/myquestions', async ({ ack, body, view, payload, context, say, client }) => {
+    ack();
+
+    var db = firebase.firestore();
+    const dbRef = db.collection(body['user_id']);
+    const snapshot  = await dbRef.get();
+    const myArray = []
+
+    const userId = body['user_id'];
+    const channelId = body['channel_id'];
+
+    if (snapshot.empty) {
+        const response = client.chat.postEphemeral({
+            channel: channelId,
+            user: userId,
+            text: "You don't have any saved questions."
+        });
+        return;
+    }
+
+    snapshot.forEach(doc => {
+        myArray.push(doc.data().title);
+    });
+
+    var listOfTitles = 'Your questions are: ' + myArray.join(', ');
+
+    const response = client.chat.postEphemeral({
+        channel: channelId,
+        user: userId,
+        text: listOfTitles
+    });
+})
 
 app.message(':wave:', async ({ message, say }) => {
     ack();
