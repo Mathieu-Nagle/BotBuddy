@@ -103,7 +103,7 @@ app.command('/helloworld', async ({ ack, payload, context }) => {
 });
 
 app.command('/createquestion', async ({ ack, payload, context, body }) => {
-    ack();
+    await ack();
 
     const channelId = body['channel_id'];
     const initTitle = payload.text;
