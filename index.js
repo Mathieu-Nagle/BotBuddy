@@ -368,7 +368,7 @@ app.command('/createquestion', async ({ ack, payload, context, body }) => {
     }
 
     app.view('submit_question', async ({ ack, body, view, context, client }) => {
-        ack();
+        await ack();
     
         console.log(view);
         const userId = body['user']['id'];
@@ -1147,15 +1147,22 @@ app.event('app_home_opened', async ({ event, client, context}) => {
     try {
         const result = await client.views.publish({
             user_id: event.user,
-            view: {
-                type: 'home',
-                callback_id: 'home_view',
-                blocks: [
+            view: 
+            {
+                "type": "home",
+                "blocks": [
                     {
                         "type": "section",
                         "text": {
-                          "type": "mrkdwn",
-                          "text": "*Welcome to your _App's Home_* :tada:"
+                            "type": "mrkdwn",
+                            "text": "Hey there! My name is *BotBuddy*! :wave:"
+                        }
+                    },
+                    {
+                        "type": "section",
+                        "text": {
+                            "type": "mrkdwn",
+                            "text": "I'm here to help make online learning more *fun* and *interactive* for young students!"
                         }
                     },
                     {
@@ -1164,25 +1171,67 @@ app.event('app_home_opened', async ({ event, client, context}) => {
                     {
                         "type": "section",
                         "text": {
-                          "type": "mrkdwn",
-                          "text": "This button won't do much for now but you can set up a listener for it using the `actions()` method and passing its unique `action_id`. See an example in the `examples` folder within your Bolt app."
+                            "type": "mrkdwn",
+                            "text": "Here are some of the things I can do:"
                         }
                     },
                     {
-                        "type": "actions",
-                        "elements": [
-                            {
-                                "type": "button",
-                                "action_id": "test",
-                                "text": {
-                                    "type": "plain_text",
-                                    "text": "Click me!"
-                                }
-                            }
-                        ]   
+                        "type": "header",
+                        "text": {
+                            "type": "plain_text",
+                            "text": "Commands",
+                            "emoji": true
+                        }
+                    },
+                    {
+                        "type": "section",
+                        "text": {
+                            "type": "mrkdwn",
+                            "text": "*/createquestion*: create and save a question by filling out a form"
+                        }
+                    },
+                    {
+                        "type": "section",
+                        "text": {
+                            "type": "mrkdwn",
+                            "text": "*/postquestion [Question Title]*: post a saved question by entering its question title"
+                        }
+                    },
+                    {
+                        "type": "section",
+                        "text": {
+                            "type": "mrkdwn",
+                            "text": "*/editquestion [Question Title]*: edit a saved question by entering its question title"
+                        }
+                    },
+                    {
+                        "type": "section",
+                        "text": {
+                            "type": "mrkdwn",
+                            "text": "*/deletequestion [Question Title]*: delete a saved question by entering its question title"
+                        }
+                    },
+                    {
+                        "type": "section",
+                        "text": {
+                            "type": "mrkdwn",
+                            "text": "*/myquestions*: displays all your saved question titles"
+                        }
+                    },
+                    {
+                        "type": "divider"
+                    },
+                    {
+                        "type": "header",
+                        "text": {
+                            "type": "plain_text",
+                            "text": "My Questions",
+                            "emoji": true
+                        }
                     }
                 ]
             }
+                
         });
         console.log(result);
     }
