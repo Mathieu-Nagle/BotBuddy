@@ -20,13 +20,23 @@ The Slack API, Bolt API, Firebase API, and GitHub were the most helpful when it 
 
 2. What was most difficult? What would you do differently?
 
-The most difficult part was setting it up. Looking outside the Slack API, we tried finding tutorials for setting up our bot on Slack. But many of the tutorials were outdated and the ones that worked didn't explain how to implement the other features we would want. Finding the Bolt API was definitely a lifesaver. It made implementing the features of our bot much easier. If we had any questions about any features we want to implement, we reached out to the Slack Help Center, and they responded very quickly. The one thing we would maybe do differently is set up the GitHub Project Board much earlier. We didn't know we had to set it up earlier than we did, but as far as collaboration, we didn't run into any issues at all. 
+The most difficult part was setting it up. Looking outside the Slack API, we tried finding tutorials for setting up our bot on Slack. But many of the tutorials were outdated and the ones that worked didn't explain how to implement the other features we would want. Finding the Bolt API was definitely a lifesaver. It made implementing the features of our bot much easier. If we had any questions about any features we want to implement, we reached out to the Slack Help Center, and they responded very quickly. As far as doing anything differently, nothing really comes to mind. Almost everything we wanted to implement, we were able to do besides implmenting a time limit for answering a question.
 
 3. What implementation, testing, and integration methods might you want to try again in the future on another project?
 
 I would love to make more bots/apps on Slack using Bolt! It was so much fun making this bot and it was fairly straightforward to implement. I demoed our bot on my two younger cousins, and they really enjoyed answering the questions on Slack. Overall, this was a very fun and exciting project and I'm extremely happy with the end result.
 
 ### Process
-1. 
+1. What was most helpful about implementing kanban and code review in your project?
+
+Kanban and code review was helpful in staying organized in our project. We knew what features we wanted to add to our bot, so we easily were able to turn those into issues and upon making a pull request, we can link those issues to the pull request so that they close when the pull request is merged. Milestones were also helpful in keeping track of each iteration of our project, one for each use case. It made all the issues organized under the specific milestone, or use case, they were needed for.
+
+2. What was most difficult? What would you do differently?
+
+The one thing we would maybe do differently is set up the GitHub Project Board much earlier. We didn't know we had to set it up earlier than we did, but as far as collaboration, we didn't run into any issues at all. We also didn't set up automation early in the project, only setting it up later. We weren't sure of how to implement automation and early in the project we were hesitant to implement it. However, if we had set it up in the beginning of the project, it would have made the project much more organized.
+
+3. What software processes or practices might you want to try again in the future on another project?
+
+I would definitely use a kanban board to keep track of the features we want to implement. It was very useful in keeping track of anything that needs to be done, what has already been started on, and what is already completed. In our group of two, we weren't able to see the effects we would have if we were working in a larger group. For larger groups and teams, having a kanban board is essential for organization and collaboration.
 
 ### Overall
