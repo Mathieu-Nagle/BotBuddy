@@ -14,7 +14,19 @@ The most difficult part figuring out where to make BotBuddy. Our original idea w
 I would definitely use storyboarding again for another project in the future. Especially working on the project remotely with my teammate, it is extremely important that we both have the concept of design of our bot. I struggled with this in a project last year where one teammate had a different idea of how the website would look and function than the ideas of the rest of group, which made collaboration and development difficult since we were developing two different things. Storyboarding helps in making sure everyone in the group agrees on the same design and architecture of the project.
 
 ### Implementation
+1. What was most helpful about implementing, testing, and integration in your bot project?
+
+The Slack API, Bolt API, Firebase API, and GitHub were the most helpful when it came to implementation, testing, and integration in our bot project. Slack API was very resourceful in its heavy documentation, but there were a few things missing from it. They had many pages that were outdated, so looking for exactly what we needed took longer than expected. Additionally, there weren't any code examples which made it difficult to implement the features for our project. I figured out we needed a framework to build our bot easier, so we were able to find Bolt, a framework used to build apps specifically on Slack! Its API is super helpful in finding how to implement the exact features we wanted in our bot. We used Firebase to store the questions data of our users and GitHub was used for collaboration, tracking issues, and integration of different features.
+
+2. What was most difficult? What would you do differently?
+
+The most difficult part was setting it up. Looking outside the Slack API, we tried finding tutorials for setting up our bot on Slack. But many of the tutorials were outdated and the ones that worked didn't explain how to implement the other features we would want. Finding the Bolt API was definitely a lifesaver. It made implementing the features of our bot much easier. If we had any questions about any features we want to implement, we reached out to the Slack Help Center, and they responded very quickly. The one thing we would maybe do differently is set up the GitHub Project Board much earlier. We didn't know we had to set it up earlier than we did, but as far as collaboration, we didn't run into any issues at all. 
+
+3. What implementation, testing, and integration methods might you want to try again in the future on another project?
+
+I would love to make more bots/apps on Slack using Bolt! It was so much fun making this bot and it was fairly straightforward to implement. I demoed our bot on my two younger cousins, and they really enjoyed answering the questions on Slack. Overall, this was a very fun and exciting project and I'm extremely happy with the end result.
 
 ### Process
+1. 
 
 ### Overall
