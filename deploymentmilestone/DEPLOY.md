@@ -1,6 +1,6 @@
 # Deployment Milestone
 ### Deployment scripts
-We used DigitalOcean to depoly our bot. We did this by linking our repo to a DigitalOcean app which is setup as a webservice. We then input our environmental variables into DigitalOcean and had it encrpty them. It then generalted the [bot-buddy.yaml](bot-buddy.yaml) file which contains all of the setting for the deployment. DigitalOcean then ran the `node indes.js` command which started up our code. You can see the successful sdeployment below. <br>
+We used DigitalOcean to depoly our bot. We did this by linking our repo to a DigitalOcean app which is setup as a webservice. We then input our environmental variables into DigitalOcean and had it encrpty them. It then generalted the [bot-buddy.yaml](bot-buddy.yaml) file which contains all of the setting for the deployment. DigitalOcean then ran the `node index.js` command which started up our code. You can see the successful sdeployment below. <br>
 <img src="SuccessfulDeployment.PNG" alt="SuccessfulDeployment.PNG" width="600"/> <br> <br>
 DigitalOcean then generated a [URL](https://bot-buddy-uuvkt.ondigitalocean.app/) that we could use to deploy our bot. We then input this URL into our Slack bot settings. <br> <br>
 <img src="SlackSettings.PNG" alt="SlackSettings.PNG" width="600"/>
