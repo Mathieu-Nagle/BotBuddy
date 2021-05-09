@@ -1,0 +1,28 @@
+name: bot-buddy
+region: nyc
+services:
+- environment_slug: node-js
+  envs:
+  - key: SLACK_SIGNING_SECRET
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: EV[1:Rq0HGyU1w2iMNE3nReHwFi5dkQSLi3it:dJ8mvdtjdKm3iVlvc4B3fYJH9PnLU0jmrulnbNruFTfRzl4LXAS2HH7kSVfHL6kn]
+  - key: SLACK_BOT_TOKEN
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: EV[1:xgUQri+G4FbfAE7TvAtz9XMGIi9C546p:iJz9SVFkPU3HoBauuhGlCQP8f9m9vO29T+VneOFsFzU0b4Kfkv5WAGRETcs5+lkEKLAhVPuQZpnnXy4NMrn/t0DjhQP5WJqkoQ==]
+  - key: GIPHY_API_KEY
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: EV[1:VGtm9SzUM17f5o6co3BUjuJczCKwDxKx:5dYn4+DvRegbbr5RfpfFalUBTs6LQ091opSy++FGNcVdtEZIS+yu56Pae5uftCHY]
+  github:
+    branch: main
+    deploy_on_push: true
+    repo: Mathieu-Nagle/BotBuddy
+  http_port: 8080
+  instance_count: 1
+  instance_size_slug: basic-xxs
+  name: bot-buddy
+  routes:
+  - path: /
+  run_command: node index.js
