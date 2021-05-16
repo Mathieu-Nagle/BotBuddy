@@ -35,8 +35,8 @@ In terms of our development process, we were able to create an kanban board on G
 Looking back at our project, we are extremely happy that we were able to successfully implement our idea of BotBuddy. It gave us gradification when we were able to demonstate our bot with a few young kids. The kids really enjoyed BotBuddy's friendly nature and they had fun answering questions with him. This showed that our bot was a success and there is potential for BotBuddy's future!
 
 Additional reflections can be found here:
-- [Leena's Reflection](./reflection-leena/README.md)
-- [Mathieu's Reflection](./reflection-mathieu/README.md)
+- [Leena's Reflection](../reflection-leena/README.md)
+- [Mathieu's Reflection](../reflection-mathieu/README.md)
 
 ## Future
 For this project, we were able to successfully implement the major features of BotBuddy we originally had intended. As we were working on the project, we thought a few ideas to make BotBuddy more useful for teachers. Some of these ideas include adding a timer function where the student has to answer a question in a given timeframe and collecting student responses to a question for teachers to use to evaluate their performance. Currently, we have no set plan to work on these functions, but when given enough free time, we are willing to research these functions. Together, we really enjoyed working on this project and we would love to see BotBuddy develop and grow!
