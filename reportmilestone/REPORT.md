@@ -12,17 +12,17 @@ The primary features of BotBuddy include Creating Questions, Posting Questions, 
 ### Creating Questions
 A teacher can create a question using BotBuddy by entering the command `/createquestion`. This will open a windows that prompts the teacher to enter a question title, the question, the answer choices, the hints, and select which answer choice is correct. The image below shows the window the teacher will see. Once the teacher clicks "Submit", BotBuddy will save the question using database. 
 
-<img src="./deploymentmilestone/createquestion.png" alt="createquestion.png" height="500px">
+<img src="../deploymentmilestone/createquestion.png" alt="createquestion.png" height="500px">
 
 ### Posting Questions
 A teacher can post a question they have created using BotBuddy by entering the command `/postquestion [Question Title]` and entering the question title they would like to post before clicking send. If the question title exists, BotBuddy will post the question to the channel with the question title and answer choices the student can select. The image below shows BotBuddy posting a question. If BotBuddy cannot find the question title in the database, BotBuddy will alert the teacher that it cannot find the question they requested. Additionally, if the teacher forgets to enter the question title when using the command, BotBuddy will send the teacher a list of questions that is saved.
 
-<img src="./deploymentmilestone/postquestion.png" alt="postquestion.png" width="800px">
+<img src="../deploymentmilestone/postquestion.png" alt="postquestion.png" width="800px">
 
 ### Answering Questions
 Once BotBuddy posts a question in a channel, the students have the ability to answer the question! If they select the correct answer, BotBuddy will turn green, send them a congratulatory message, and send them a random gif. The image below shows a student answering the question correctly and how BotBuddy responds. However, if the student selects the incorrect answer, BotBuddy will turn red and will help the student by sending them a hint. 
 
-<img src="./deploymentmilestone/answerquestion-correct.png" alt="answerquestion-corrent.png" width="500px">
+<img src="../deploymentmilestone/answerquestion-correct.png" alt="answerquestion-corrent.png" width="500px">
 
 ### Additional Features
 BotBuddy has additonal features including editing, deleting, and viewing questions that the teacher has saved. A teacher can edit a question using the `/editquestion [Question Title]` command. They can change any information about the question and click "Submit" to save their changes. A teacher can delete a question using the `/deletequestion [Question Title]` command. BotBuddy will ask the teacher to confirm the deletion before deleting the question. And finally, a teacher can view their saved questions using the command `/myquestions`. BotBuddy will send them a list of question that are saved.
